@@ -1,46 +1,28 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 import { OpenAI } from "langchain/llms/openai";
-import { OpenAIEmbeddings } from "langchain/embeddings/openai";
-import { CheerioWebBaseLoader } from "langchain/document_loaders/web/cheerio";
 import {
   RetrievalQAChain,
   ConversationalRetrievalQAChain,
 } from "langchain/chains";
-import { HNSWLib } from "langchain/vectorstores/hnswlib";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { BufferMemory } from "langchain/memory";
 
 import prompt from "prompt-sync";
-const urls = [
-  "https://docs.kali.gg/#features",
-  "https://kali.mirror.xyz/vqfVO70rkW3_D7MQA7oKlcf5yErlHt2mRUsY62hNkT0",
-];
+
+
+// Create the vectorstore 
+// @ HNSWLib
+// import {vectorStore} from './hnswLib.js';
+// @ Milvus
+// import {vectorStore} from './milvus.js';
+// @ Pinecone
+import {vectorStore} from './pinecone.js';
+
 // Initialize the LLM to use to answer the question
 const model = new OpenAI({
   temperature: 0.9,
   openAIApiKey: process.env.OPENAI_API_KEY,
 });
-//  Load in the URL we want to do question answering over
-let docs = [];
-await Promise.all(
-  urls.map(async (url) => {
-    const loader = new CheerioWebBaseLoader(url);
-    const _doc = await loader.load();
-    docs.push(_doc[0]);
-  })
-);
-// Split the text into chunks
-const splitter = new RecursiveCharacterTextSplitter({
-  chunkSize: 256,
-  chunkOverlap: 1,
-});
-const docOutput = await splitter.splitDocuments(docs);
-// Create the vectorstore
-const vectorStore = await HNSWLib.fromDocuments(
-  docOutput,
-  new OpenAIEmbeddings()
-);
 
 //// const chain = RetrievalQAChain.fromLLM(model, vectorStore.asRetriever());
 //// const memory = new BufferMemory();

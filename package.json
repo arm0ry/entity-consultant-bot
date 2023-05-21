@@ -5,13 +5,15 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon index.js",
-    "build": "echo This is a static template, there is no bundler or bundling involved!"
+    "bot": "node index.js",
+    "build": "node indexDoc.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@pinecone-database/pinecone": "^0.1.6",
+    "@zilliz/milvus2-sdk-node": "^2.2.10",
     "cheerio": "^1.0.0-rc.12",
     "chromadb": "^1.4.2",
     "dotenv": "^16.0.3",
